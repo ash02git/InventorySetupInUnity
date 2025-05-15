@@ -8,6 +8,7 @@ public class ItemScriptableObject:ScriptableObject
 
     public Sprite icon;
 
+    public string itemName;
     public string description;
     public int buyingPrice;
     public int sellingPrice;
