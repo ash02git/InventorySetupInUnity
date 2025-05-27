@@ -1,4 +1,4 @@
-public enum ItemTypes
+public enum ItemType
 {
     Materials,
     Weapons,
