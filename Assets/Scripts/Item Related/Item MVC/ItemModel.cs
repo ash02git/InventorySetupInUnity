@@ -30,6 +30,7 @@ public class ItemModel
         this.sellingPrice = sellingPrice;
         this.weight = weight;
         this.quantity = quantity;
+        this.rarity = rarity;
     }
     public void SetItemController(ItemController itemController)=>this.itemController = itemController;
 }

@@ -333,6 +333,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9a58918e3f9cf954f8cd076e5d84711e, type: 2}
   - {fileID: 11400000, guid: 8ce7270a1c5a4294d808445e6210a21c, type: 2}
   - {fileID: 11400000, guid: d88f75734d3e13c479160696c8b1d0b6, type: 2}
+  - {fileID: 11400000, guid: 30563e04ecbc40748abb599196256d62, type: 2}
   - {fileID: 11400000, guid: 6cfead69b1c6bff4482cdb6e822a01c5, type: 2}
   - {fileID: 11400000, guid: a85bbaec7e6c29343985f0c1d6f5bb36, type: 2}
   - {fileID: 11400000, guid: 5e4e19ea4d04ae5489ac775678788495, type: 2}
@@ -345,6 +346,7 @@ MonoBehaviour:
   itemCountSetterPanelPrefab: {fileID: 8179910932815332592, guid: 10545dc6343b1f148bce6e78aef70c23, type: 3}
   confirmationRequestPanelPrefab: {fileID: 7499085819267952191, guid: a7dce2665d0f88742920fbb0021266fb, type: 3}
   transactionCompleteOverlayPrefab: {fileID: 4446482957281917388, guid: 1e7417a1482671d41a2757076b94cfad, type: 3}
+  gatherResourcesButtonPrefab: {fileID: 7516006616554265433, guid: 472ad4909f9b43348a0d2bc4fac35d90, type: 3}
 --- !u!1 &1250283250
 GameObject:
   m_ObjectHideFlags: 0

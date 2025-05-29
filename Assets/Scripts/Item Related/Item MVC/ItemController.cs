@@ -27,7 +27,7 @@ public class ItemController
     {
         itemView.UpdateQuantityText();
     }
-    public void DeleteItem()
+    public void DestroyItem()
     {
         GameObject.Destroy(itemView.gameObject);
     }

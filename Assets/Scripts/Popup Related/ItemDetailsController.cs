@@ -47,6 +47,7 @@ public class ItemDetailsController : MonoBehaviour
         itemIconImage.sprite = _model.icon;
         itemTypeText.text = "Item Type : " + _model.type.ToString();
         itemRarityText.text = "Item Rarity : " + _model.rarity.ToString();
+        Debug.Log(_model.rarity);
         itemWeightText.text = "Item Weight : " + _model.weight.ToString();
         itemQuantityText.text = "Item Quantity : " + _model.quantity.ToString();
 

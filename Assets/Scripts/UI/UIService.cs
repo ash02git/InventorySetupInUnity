@@ -9,6 +9,7 @@ public class UIService : MonoBehaviour
     private ItemCountSetterController itemCountSetterController;
     private ConfirmationRequestController confirmationRequestController;
     private TransactionCompleteController transactionCompleteController;
+    private GatherResourcesController gatherResourcesController;
 
     //Item SO list
     public List<ItemScriptableObject> itemsSO;
@@ -21,6 +22,7 @@ public class UIService : MonoBehaviour
     public ItemCountSetterController itemCountSetterPanelPrefab;
     public ConfirmationRequestController confirmationRequestPanelPrefab;
     public TransactionCompleteController transactionCompleteOverlayPrefab;
+    public GatherResourcesController gatherResourcesButtonPrefab;
 
     private void Start()
     {
@@ -48,6 +50,9 @@ public class UIService : MonoBehaviour
 
         //creating transactionCompleteController
         transactionCompleteController = GameObject.Instantiate<TransactionCompleteController>(transactionCompleteOverlayPrefab, transform);
+
+        //creating gatherResourcesController
+        gatherResourcesController = GameObject.Instantiate<GatherResourcesController>(gatherResourcesButtonPrefab, transform);
     }
     private void InjectDependencies()
     {
@@ -66,21 +71,8 @@ public class UIService : MonoBehaviour
         //init for confirmationRequestController
         confirmationRequestController.Init(shopController, inventoryController, itemDetailsController,
             itemCountSetterController, transactionCompleteController);
-    }
 
-    public void OnItemButtonClicked(ItemModel _model, ItemContext _context)
-    {
-        itemDetailsController.gameObject.SetActive(true);
-        itemDetailsController.UpdateDetails(_model, _context);
-    }
-    public void OnActionButtonClicked(ItemModel _model, ItemContext _context)
-    {
-        itemCountSetterController.gameObject.SetActive(true);
-        itemCountSetterController.UpdateDetails(_model, _context);
-    }
-    public void OnCountValueSet(ItemModel _model, ItemContext _context, int _count)
-    {
-        confirmationRequestController.gameObject.SetActive(true);
-        confirmationRequestController.UpdateDetails(_model, _context, _count);
+        //init for gatherResourcesController
+        gatherResourcesController.Init(inventoryController, shopController, itemsSO);
     }
 }

@@ -14,11 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 2
   type: 2
-  rarity: 0
+  rarity: 3
   icon: {fileID: 21300000, guid: 97d7d8a88554e4546b7f15e25d09efeb, type: 3}
-  i_name: 
   description: Bones can be powdered and eaten and will increase strength by 2 points.
-  buyingPrice: 30
-  sellingPrice: 25
-  weight: 3
-  quantity: 10
+  buyingPrice: 50
+  sellingPrice: 40
+  weight: 8
+  quantity: 25
