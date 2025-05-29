@@ -63,6 +63,7 @@ public class ShopController
                 value.sellingPrice, value.weight, value.quantity);
 
             ItemController itemController = new ItemController(itemModel, shopView.itemButtonPrefab, shopView.itemButtonsParent);
+            itemController.GetItemView().itemButton.interactable = false;   
 
             shopModel.itemsList.Add(itemController);
 
@@ -123,5 +124,13 @@ public class ShopController
     private void DisplayChangesOnTradedItem(ItemController tradedItem)//,ItemContext _context)//, int _count)
     {
         tradedItem.DisplayChangedQuantityText();
+    }
+
+    public void TurnOnAllButtons()
+    {
+        foreach(ItemController item in shopModel.itemsList)
+        {
+            item.GetItemView().itemButton.interactable = true;
+        }
     }
 }
