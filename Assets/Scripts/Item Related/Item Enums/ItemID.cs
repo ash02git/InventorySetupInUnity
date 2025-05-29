@@ -4,6 +4,7 @@ public enum ItemID
     Arrow,//weapon
     Bone,//consumable
     BearSkin,//material
+    Cotton,//material
     Feather,//material
     GoldChest,//treasure
     HeavenlyRelic,//treasure

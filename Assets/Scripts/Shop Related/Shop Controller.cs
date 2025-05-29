@@ -106,7 +106,7 @@ public class ShopController
     {
         ItemController tradedItem = GetItemBasedOnId(passedModel.id);
         UpdateChangesOnTradedItem(tradedItem,_context, _count);
-        DisplayChangesOnTradedItem(tradedItem,_context,_count);
+        DisplayChangesOnTradedItem(tradedItem);//, _context);//,_count);
     }
     private void UpdateChangesOnTradedItem(ItemController tradedItem, ItemContext _context, int _count)
     {
@@ -120,7 +120,7 @@ public class ShopController
                 break;
         }
     }
-    private void DisplayChangesOnTradedItem(ItemController tradedItem,ItemContext _context, int _count)
+    private void DisplayChangesOnTradedItem(ItemController tradedItem)//,ItemContext _context)//, int _count)
     {
         tradedItem.DisplayChangedQuantityText();
     }

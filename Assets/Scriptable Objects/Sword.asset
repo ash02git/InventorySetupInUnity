@@ -14,12 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 8
   type: 1
-  rarity: 0
+  rarity: 4
   icon: {fileID: 21300000, guid: 1e311a611bf0fb14a9906a0d3708a54d, type: 3}
-  i_name: 
   description: Only available at the hands of high value shop owners and nobles.
     A clean hit is usually lethal.
-  buyingPrice: 50
+  buyingPrice: 75
   sellingPrice: 50
-  weight: 3
-  quantity: 10
+  weight: 10
+  quantity: 20

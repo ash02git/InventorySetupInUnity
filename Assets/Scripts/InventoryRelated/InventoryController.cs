@@ -21,9 +21,19 @@ public class InventoryController
     {
         this.itemDetailsController = itemDetailsController;
     }
+    
     public InventoryModel GetInventoryModel()
     {
         return inventoryModel;
+    }
+    public InventoryView GetInventoryView()
+    {
+        return inventoryView;
+    }
+    public void AssignRandomCurrencyValue()
+    {
+        inventoryModel.UpdateCurrency(UnityEngine.Random.Range(500, 1000));//hardcoded for now
+        inventoryView.UpdateCurrencyText();
     }
     private void OnItemButtonClicked(ItemModel _model)
     {
@@ -73,10 +83,7 @@ public class InventoryController
 
             //deleting item if all items are sold
             if (soldItem.GetItemModel().quantity <= 0)
-            {
-                GetInventoryModel().itemsList.Remove(soldItem);
-                soldItem.DeleteItem();
-            }
+                DeleteItem(soldItem);
         }
     }
 
@@ -142,5 +149,17 @@ public class InventoryController
         itemController.GetItemView().itemButton.onClick.AddListener(()=>OnItemButtonClicked(itemModel));
 
         return itemController;
+    }
+    public void CreateNewItem(ItemModel _model)
+    {
+        ItemController itemController = new ItemController(_model, inventoryView.itemButtonPrefab, inventoryView.itemButtonsParent.transform);
+        inventoryModel.itemsList.Add(itemController);
+        itemController.GetItemView().itemButton.onClick.AddListener(() => OnItemButtonClicked(_model));
+    }
+
+    private void DeleteItem(ItemController toBeDeleted)
+    {
+        GetInventoryModel().itemsList.Remove(toBeDeleted);
+        toBeDeleted.DestroyItem();
     }
 }
