@@ -16,7 +16,7 @@ public class InventoryModel
     {
         itemsList = new List<ItemController>();
         currency = 0;//to be changed to 0 when GatherResourcesButton is implemented
-        maxWeight = 100;
+        maxWeight = 1000;
         currentWeight = 0;
     }
     public void SetInventoryController(InventoryController _controller)
