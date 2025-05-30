@@ -43,9 +43,6 @@ public class InventoryController
 
     public void OnTransactionPerformed(ItemModel passedModel, ItemContext passedContext, int passedCount)
     {
-
-        ItemController tradedItem = GetItemBasedOnId(passedModel.id);
-
         switch (passedContext)
         {
             case ItemContext.Sell:
@@ -120,7 +117,6 @@ public class InventoryController
         inventoryModel.UpdateWeight(changeInWeight);
         inventoryView.UpdateWeightText();
     }
-
     
     private ItemController GetItemBasedOnId(ItemID id)
     {
