@@ -22,10 +22,7 @@ public class ShopController
         CreateShop(itemsSO);
     }
 
-    public void Init( ItemDetailsController itemDetailsController )
-    {
-        this.itemDetailsController = itemDetailsController;
-    }
+    public void Init( ItemDetailsController itemDetailsController ) => this.itemDetailsController = itemDetailsController;
 
     public List<ItemController> GetItemsList() => shopModel.GetItemsList();
 

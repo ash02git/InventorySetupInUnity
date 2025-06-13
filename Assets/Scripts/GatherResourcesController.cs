@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,35 +9,28 @@ public class GatherResourcesController : MonoBehaviour
     [SerializeField] private Button button;
     [SerializeField] private GameObject failedText;
 
-    private List<ItemScriptableObject> itemsSOList;
+    private List<ItemScriptableObject> gatheredItemsSOList;
 
-    private readonly int[] ItemRaritiesCumulativeValues = { 0, 100, 150, 200, 300 };
+    private readonly int[] ItemRaritiesCumulativeValues = { 0, 100, 150, 200, 300 };//verycommon-0,common-100,rare-150,epic-200,legendary-300
     private readonly int[] ItemTypesProbabilities = { 100, 90, 50, 25, 10 };//verycommon-100%,common-90%,rare-50%,epic-25%,legendary-10%
 
     private InventoryController inventoryController;
     private ShopController shopController;
 
-    private List<ItemScriptableObject> itemsSO;
+    private List<ItemScriptableObject> originalItemsSOList;
 
     public void Init(InventoryController inventoryController, ShopController shopController, List<ItemScriptableObject> itemsSO)
     {
         this.inventoryController = inventoryController;
         this.shopController = shopController;
-        this.itemsSO = itemsSO;
+        originalItemsSOList = itemsSO;
 
-        //itemsModelList = new List<ItemModel>();
-        itemsSOList = new List<ItemScriptableObject>();
+        gatheredItemsSOList = new List<ItemScriptableObject>();
     }
 
-    private void Start()
-    {
-        button.onClick.AddListener(OnGatherResources);//Subscribing
-    }
+    private void Start() => button.onClick.AddListener(OnGatherResources);//Subscribing
 
-    private void OnDestroy()
-    {
-        button.onClick.RemoveListener(OnGatherResources);//Unsubscribing
-    }
+    private void OnDestroy() => button.onClick.RemoveListener(OnGatherResources);//Unsubscribing
 
     private void OnGatherResources()
     {
@@ -45,8 +39,11 @@ public class GatherResourcesController : MonoBehaviour
         if(!IsGatheredItemsOverWeight(cumulativeWeightAfterGathering))
         {
             CreateItemsInInventory(cumulativeWeightAfterGathering);
+
             inventoryController.AssignRandomCurrencyValue();
+
             shopController.MakeItemButtonsInteractable();//making the buttons in shop interactable
+
             DestroyGatherResourcesButton();
         }
         else
@@ -61,20 +58,17 @@ public class GatherResourcesController : MonoBehaviour
         int cumulativeValue = 0;
         int cumulativeWeight = 0;
 
-        for (int i = 1; i <= 5; i++)//5 ItemRarity Types//replace with enum.getnumberofitemsinenum thing
+        for (int i = 1; i <= Enum.GetValues(typeof(ItemRarity)).Length; i++)
         {
             if (IsItemRarityGatherable(cumulativeValue, i))//Checking if an item of rarity value i is attainable according to CumulativeValue math
             {
-                //Debug.Log((ItemRarity)i + " rarity is gatherable. Cumulative value is " + cumulativeValue);
-                foreach (ItemScriptableObject item in itemsSO)
+                foreach (ItemScriptableObject item in originalItemsSOList)
                 {
                     if (item.rarity == (ItemRarity)i)//Selectively checking for particular Rarity
                     {
                         if (IsProbabilitySatisfied(i))//Checking if selected item's probability is met
                         {
-                            //Debug.Log("Number of items as preset is " + item.quantity);
-                            int numberOfItems = Random.Range(0, item.quantity);
-                            //Debug.Log("Random item count generated is "+ numberOfItems);//comment to check working
+                            int numberOfItems = UnityEngine.Random.Range(0, item.quantity);
 
                             if (numberOfItems != 0)
                             {
@@ -95,10 +89,8 @@ public class GatherResourcesController : MonoBehaviour
 
     private void CreateItemsInInventory(int cumulativeWeight)
     {
-        foreach (ItemScriptableObject itemSO in itemsSOList)
-        {
+        foreach (ItemScriptableObject itemSO in gatheredItemsSOList)
             inventoryController.CreateNewItem(itemSO);
-        }
 
         inventoryController.UpdateWeight(cumulativeWeight);
         inventoryController.UpdateWeightText();
@@ -119,19 +111,15 @@ public class GatherResourcesController : MonoBehaviour
     
     private void CreateItemSO(ItemScriptableObject item, int numberOfItems)
     {
-        //ItemModel newModel = new ItemModel(item.id, item.type, item.rarity,
-        //                                                       item.icon, item.description, item.buyingPrice,
-        //                                                       item.sellingPrice, item.weight, numberOfItems);
         ItemScriptableObject newItemSO = ScriptableObject.CreateInstance<ItemScriptableObject>();
         JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(item), newItemSO);
 
-        newItemSO.quantity = numberOfItems;//important line
+        newItemSO.quantity = numberOfItems;
 
-        //itemsModelList.Add(newModel);//previously first parameter was ItemModel
-        itemsSOList.Add(newItemSO);
+        gatheredItemsSOList.Add(newItemSO);
     }
 
-    private void ClearItemsList()=>itemsSOList.Clear();
+    private void ClearItemsList()=>gatheredItemsSOList.Clear();
 
     private void DestroyGatherResourcesButton() => Destroy(gameObject);
 }
