@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -15,21 +14,15 @@ public class InventoryView : MonoBehaviour
     //Prefabs
     [SerializeField] public ItemView itemButtonPrefab;
 
-    public void SetInventoryController(InventoryController _controller)
-    {
-        inventoryController = _controller;
+    public void SetInventoryController(InventoryController _controller) => inventoryController = _controller;
 
-        currencyText.text = "Currency : " + inventoryController.GetInventoryModel().currency;
-        weightText.text = "Weight : 0/" + inventoryController.GetInventoryModel().maxWeight;
+    private void Start()
+    {
+        currencyText.text = "Currency : " + inventoryController.GetCurrency();
+        weightText.text = "Weight : 0/" + inventoryController.GetMaxWeight();
     }
 
-    public void UpdateCurrencyText()
-    {
-        currencyText.text = "Currency : " + inventoryController.GetInventoryModel().currency;
-    }
+    public void UpdateCurrencyText() => currencyText.text = "Currency : " + inventoryController.GetCurrency();
 
-    public void UpdateWeightText()
-    {
-        weightText.text = "Weight : " + inventoryController.GetInventoryModel().currentWeight + "/" + inventoryController.GetInventoryModel().maxWeight;
-    }
+    public void UpdateWeightText() => weightText.text = "Weight : " + inventoryController.GetCurrentWeight() + "/" + inventoryController.GetMaxWeight();
 }

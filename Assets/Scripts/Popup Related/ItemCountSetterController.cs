@@ -116,12 +116,12 @@ public class ItemCountSetterController : MonoBehaviour
     }
     private void CheckForPlusButtonInteractability()
     {
-        InventoryModel i_model = inventoryController.GetInventoryModel();
+        //InventoryModel i_model = inventoryController.GetInventoryModel();
         //Checks to limit addition of items based on Buy or Sell context
         if (itemContext == ItemContext.Buy)
         {
-            if (((itemCount + 1) * itemDetails.buyingPrice > i_model.currency) ||
-                ((itemCount + 1) * itemDetails.weight + i_model.currentWeight > i_model.maxWeight) ||
+            if (((itemCount + 1) * itemDetails.buyingPrice > inventoryController.GetCurrency()) ||
+                ((itemCount + 1) * itemDetails.weight + inventoryController.GetCurrentWeight()  > inventoryController.GetMaxWeight() ) ||
                 ((itemCount + 1) > itemDetails.quantity))
             {
                 plusButton.interactable = false;

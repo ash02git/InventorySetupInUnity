@@ -10,8 +10,8 @@ public class GatherResourcesController : MonoBehaviour
 
     private List<ItemScriptableObject> itemsSOList;
 
-    private readonly int[] cumlativeValueNeededForDifferentItemRarities = { 0, 100, 150, 200, 300 };
-    private readonly int[] probabilityOfDifferentItemTypes = { 100, 90, 50, 25, 10 };//verycommon-100%,common-90%,rare-50%,epic-25%,legendary-10%
+    private readonly int[] ItemRaritiesCumulativeValues = { 0, 100, 150, 200, 300 };
+    private readonly int[] ItemTypesProbabilities = { 100, 90, 50, 25, 10 };//verycommon-100%,common-90%,rare-50%,epic-25%,legendary-10%
 
     private InventoryController inventoryController;
     private ShopController shopController;
@@ -95,12 +95,13 @@ public class GatherResourcesController : MonoBehaviour
 
     private void CreateItemsInInventory(int cumulativeWeight)
     {
-        foreach (ItemScriptableObject itemSO in itemsSOList)//previous condition - ItemModel itemModel in itemsModelList
+        foreach (ItemScriptableObject itemSO in itemsSOList)
         {
-            inventoryController.CreateNewItem(itemSO);//previous parameter was itemModel
+            inventoryController.CreateNewItem(itemSO);
         }
-        inventoryController.GetInventoryModel().UpdateWeight(cumulativeWeight);
-        inventoryController.GetInventoryView().UpdateWeightText();
+
+        inventoryController.UpdateWeight(cumulativeWeight);
+        inventoryController.UpdateWeightText();
     }
 
     IEnumerator GatheringResourcesFailedCoroutine()
@@ -110,11 +111,11 @@ public class GatherResourcesController : MonoBehaviour
         failedText.SetActive(false);
     }
 
-    private bool IsItemRarityGatherable(int value, int index) => (value >= cumlativeValueNeededForDifferentItemRarities[index - 1]);
+    private bool IsItemRarityGatherable(int value, int index) => (value >= ItemRaritiesCumulativeValues[index - 1]);
     
-    private bool IsGatheredItemsOverWeight(int weight) => weight > inventoryController.GetInventoryModel().maxWeight;
+    private bool IsGatheredItemsOverWeight(int weight) => weight > inventoryController.GetMaxWeight();
     
-    private bool IsProbabilitySatisfied(int index) => ( UnityEngine.Random.Range(1, 101) > (100 - probabilityOfDifferentItemTypes[index - 1]) );
+    private bool IsProbabilitySatisfied(int index) => ( UnityEngine.Random.Range(1, 101) > (100 - ItemTypesProbabilities[index - 1]) );
     
     private void CreateItemSO(ItemScriptableObject item, int numberOfItems)
     {
