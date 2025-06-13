@@ -13,23 +13,23 @@ public class ShopController
     private ShopModel shopModel;
     private ShopView shopView;
 
-    public ShopController(List<ItemScriptableObject> itemsSO, ShopModel _model, ShopView shopViewPrefab, Transform parent)
+    public ShopController( List<ItemScriptableObject> itemsSO, ShopModel _model, ShopView shopViewPrefab, Transform parent )
     {
         shopModel = _model;
-        shopView = GameObject.Instantiate<ShopView>(shopViewPrefab, parent);
+        shopView = GameObject.Instantiate<ShopView>( shopViewPrefab, parent );
 
-        shopModel.SetShopController(this);
         shopView.SetShopController(this);
-
         CreateShop(itemsSO);
     }
 
-    public void Init(ItemDetailsController itemDetailsController)//Injecting dependency
+    public void Init( ItemDetailsController itemDetailsController )
     {
         this.itemDetailsController = itemDetailsController;
     }
 
-    private void CreateShop(List<ItemScriptableObject> itemsSO)
+    public List<ItemController> GetItemsList() => shopModel.GetItemsList();
+
+    private void CreateShop( List<ItemScriptableObject> itemsSO )
     {
         CreateItemTypeTabs();
         CreateItemButtons(itemsSO);
@@ -45,60 +45,47 @@ public class ShopController
         }
     }
 
-    private void CreateItemButtons(List<ItemScriptableObject> itemsSO)
+    private void CreateItemButtons( List<ItemScriptableObject> itemsSO )
     {
-        foreach (ItemScriptableObject value in itemsSO)
+        foreach ( ItemScriptableObject value in itemsSO )
         {
             ItemScriptableObject newItemSO = ScriptableObject.CreateInstance<ItemScriptableObject>();
             JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(value), newItemSO);
-
-                Debug.Log(newItemSO.id + " created");
-                Debug.Log(newItemSO.id + " quantity = " +  newItemSO.quantity);
-
             ItemController itemController = new ItemController(newItemSO, shopView.itemButtonPrefab, shopView.itemButtonsParent);
-            //itemController.GetItemView().itemButton.interactable = false;  
+
             itemController.SetItemButtonNonInteractable();
+            AddItemToShop(itemController);//maybe change to shopModel.AddItem(itemController);
 
-            shopModel.itemsList.Add(itemController);
-
-            itemController.GetItemButton().onClick.AddListener(() => OnItemButtonClicked(newItemSO));//previously first parameter was ItemModel
+            itemController.GetItemButton().onClick.AddListener(() => OnItemButtonClicked(newItemSO));
         }
-        SetOnlyRequiredTypeVisible(ItemType.Materials);//initially only showing Material Items
+
+        //initially only showing Material Items
+        SetOnlyRequiredTypeVisible(ItemType.Materials);
     }
+
     public void SetOnlyRequiredTypeVisible(ItemType _type)
     {
-        foreach (var item in shopModel.itemsList)
+        foreach (var item in GetItemsList())
         {
-            if (item.GetItemType() == _type)//previous condition - item.GetItemModel().type == _type
-            {
-                //item.GetItemView().gameObject.SetActive(true);
+            if (item.GetItemType() == _type)
                 item.ShowItemButton();
-            }
             else
-            {
-                //item.GetItemView().gameObject.SetActive(false);
                 item.HideItemButton();
-            }
         }
     }
 
-    private void OnItemButtonClicked(ItemScriptableObject itemSO)//previously first parameter was ItemModel
+    private void OnItemButtonClicked(ItemScriptableObject itemSO)
     {
-        //if(itemSO.id == ItemID.Feather)
-        //{
-        //    Debug.Log("Feather is clicked");
-        //    Debug.Log("Feather quantity = " + itemSO.quantity);
-        //}
-        
         itemDetailsController.gameObject.SetActive(true);
-        itemDetailsController.UpdateDetails(itemSO, ItemContext.Buy);//previously first parameter was ItemModel
+        itemDetailsController.UpdateDetails(itemSO, ItemContext.Buy);
     }
+
     private ItemController GetItemBasedOnId(ItemID id)
     {
         ItemController boughtItem = null;
-        foreach(var item in shopModel.itemsList)
+        foreach(var item in GetItemsList())
         {
-            if(item.GetID() == id)//previous code - item.GetItemModel().id == id
+            if(item.GetID() == id)
             {
                 boughtItem= item;
                 break;
@@ -107,45 +94,22 @@ public class ShopController
         return boughtItem;
     }
 
-    public void OnTransactionPerformed(ItemScriptableObject passedItemSO, ItemContext passedContext, int passedCount)//previously first parameter was ItemModel
+    public void OnTransactionPerformed(ItemScriptableObject passedItemSO, ItemContext passedContext, int passedCount)
     {
         ItemController tradedItem = GetItemBasedOnId(passedItemSO.id);
         UpdateChangesOnTradedItem(tradedItem,passedContext, passedCount);
-        DisplayChangesOnTradedItem(tradedItem);//, _context);//,_count);
-
-        if (passedItemSO.id == ItemID.Feather)
-        {
-            Debug.Log("Feather has been " + passedContext);
-            Debug.Log("Quantity is " + passedCount);
-        }
-    }
-    private void UpdateChangesOnTradedItem(ItemController tradedItem, ItemContext _context, int _count)
-    {
-        //switch (_context)
-        //{
-        //    case ItemContext.Buy:
-        //        //tradedItem.GetItemModel().quantity = tradedItem.GetItemModel().quantity - _count;
-        //        tradedItem.UpdateShopItemQuantity(_count);
-        //        break;
-        //    case ItemContext.Sell:
-        //        //tradedItem.GetItemModel().quantity = tradedItem.GetItemModel().quantity + _count;
-        //        tradedItem.UpdateInventoryItemQuantity(_count);
-        //        break;
-        //}
-        Debug.Log("Updating changes on feather");
-        tradedItem.UpdateShopItemQuantity(_count, _context);////this single line will take care of updating count of item in shop
-    }
-    private void DisplayChangesOnTradedItem(ItemController tradedItem)//,ItemContext _context)//, int _count)
-    {
-        tradedItem.DisplayChangedQuantityText();
+        DisplayChangesOnTradedItem(tradedItem);
     }
 
-    public void TurnOnAllButtons()
+    private void UpdateChangesOnTradedItem(ItemController tradedItem, ItemContext _context, int _count) => tradedItem.UpdateShopItemQuantity(_count, _context);
+
+    private void DisplayChangesOnTradedItem(ItemController tradedItem) => tradedItem.DisplayChangedQuantityText();
+
+    public void MakeItemButtonsInteractable()
     {
-        foreach(ItemController item in shopModel.itemsList)
-        {
-            //item.GetItemView().itemButton.interactable = true;
+        foreach(ItemController item in GetItemsList())
             item.SetItemButtonInteractable();
-        }
     }
+
+    private void AddItemToShop(ItemController toBeAdded) => shopModel.AddItem(toBeAdded);
 }

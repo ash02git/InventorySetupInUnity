@@ -35,9 +35,9 @@ public class InventoryController
 
     public void UpdateWeight(int value) => inventoryModel.UpdateWeight(value);
 
-    public void RemoveItem(ItemController toBeDeleted) => inventoryModel.RemoveItem(toBeDeleted);
+    public void RemoveItemToInventory(ItemController toBeDeleted) => inventoryModel.RemoveItem(toBeDeleted);
 
-    public void AddItem(ItemController toBeAdded) => inventoryModel.AddItem(toBeAdded);
+    public void AddItemToInventory(ItemController toBeAdded) => inventoryModel.AddItem(toBeAdded);
 
     public void UpdateWeightText() => inventoryView.UpdateWeightText();
 
@@ -144,7 +144,7 @@ public class InventoryController
         newItemSO.quantity = _count;
 
         ItemController itemController = new ItemController(newItemSO, inventoryView.itemButtonPrefab, inventoryView.itemButtonsParent.transform);
-        AddItem(itemController);
+        AddItemToInventory(itemController);
         itemController.GetItemButton().onClick.AddListener(() => OnItemButtonClicked(newItemSO));
 
         return itemController;
@@ -153,9 +153,9 @@ public class InventoryController
     public void CreateNewItem(ItemScriptableObject itemSO)
     {
         ItemController itemController = new ItemController(itemSO, inventoryView.itemButtonPrefab, inventoryView.itemButtonsParent.transform);
-        AddItem(itemController);
+        AddItemToInventory(itemController);
         itemController.GetItemButton().onClick.AddListener(() => OnItemButtonClicked(itemSO));
     }
 
-    private void DeleteItem(ItemController toBeDeleted) => RemoveItem(toBeDeleted);
+    private void DeleteItem(ItemController toBeDeleted) => RemoveItemToInventory(toBeDeleted);
 }

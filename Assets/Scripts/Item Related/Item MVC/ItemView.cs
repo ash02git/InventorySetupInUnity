@@ -25,6 +25,7 @@ public class ItemView : MonoBehaviour
     public void UpdateQuantityText() => quantityText.text = "x " + itemController.GetQuantity();
 
     public void SetItemButtonNonInteractable() => itemButton.interactable = false;
+
     public void SetItemButtonInteractable() => itemButton.interactable = true;
 
     private void OnDestroy() => itemButton.onClick.RemoveAllListeners();

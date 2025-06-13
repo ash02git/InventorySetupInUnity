@@ -3,19 +3,14 @@ using System.Collections.Generic;
 
 public class ShopModel
 {
-    //list of all the items in Shop
-    public List<ItemController> itemsList;
-
-    //reference to ShopController
-    private ShopController shopController;
+    private List<ItemController> itemsList;
 
     public ShopModel()
     {
         itemsList = new List<ItemController>();
     }
 
-    public void SetShopController(ShopController _controller)
-    {
-        shopController = _controller;
-    }
+    public List<ItemController> GetItemsList() => itemsList;
+
+    public void AddItem(ItemController toBeAdded) => itemsList.Add(toBeAdded);
 }

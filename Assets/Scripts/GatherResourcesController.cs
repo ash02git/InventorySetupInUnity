@@ -46,7 +46,7 @@ public class GatherResourcesController : MonoBehaviour
         {
             CreateItemsInInventory(cumulativeWeightAfterGathering);
             inventoryController.AssignRandomCurrencyValue();
-            shopController.TurnOnAllButtons();//making the buttons in shop interactable
+            shopController.MakeItemButtonsInteractable();//making the buttons in shop interactable
             DestroyGatherResourcesButton();
         }
         else

@@ -69,13 +69,7 @@ public class ItemController
 
     public void ShowItemButton() => itemView.gameObject.SetActive(true);
 
-    public void DisplayChangedQuantityText()
-    {
-        itemView.UpdateQuantityText();
-    }
+    public void DisplayChangedQuantityText() => itemView.UpdateQuantityText();
 
-    public void DestroyItem()
-    {
-        GameObject.Destroy(itemView.gameObject);
-    }
+    public void DestroyItem() => GameObject.Destroy(itemView.gameObject);
 }
