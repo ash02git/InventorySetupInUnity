@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.Progress;
 public class InventoryController
 {
     //Dependency
@@ -35,41 +36,47 @@ public class InventoryController
         inventoryModel.UpdateCurrency(UnityEngine.Random.Range(500, 1000));//hardcoded for now
         inventoryView.UpdateCurrencyText();
     }
-    private void OnItemButtonClicked(ItemModel _model)
+    private void OnItemButtonClicked(ItemScriptableObject itemSO)//previosly parameter was ItemModel
     {
         itemDetailsController.gameObject.SetActive(true);
-        itemDetailsController.UpdateDetails(_model, ItemContext.Sell);//item button clicked from shop will be Buy Action
+        itemDetailsController.UpdateDetails(itemSO, ItemContext.Sell);//item button clicked from shop will be Buy Action//previously, first paramter was ItemModel
     }
 
-    public void OnTransactionPerformed(ItemModel passedModel, ItemContext passedContext, int passedCount)
+    public void OnTransactionPerformed(ItemScriptableObject passedItemSO, ItemContext passedContext, int passedCount)//previously first parameter was ItemModel
     {
         switch (passedContext)
         {
             case ItemContext.Sell:
-                OnItemSold(passedModel, passedCount);
+                OnItemSold(passedItemSO, passedCount);//previously first parameter was ItemModel
                 break;
             case ItemContext.Buy:
-                OnItemBought(passedModel, passedCount);
+                OnItemBought(passedItemSO, passedCount);//previously first parameter was ItemModel
                 break;
+        }
+
+        if (passedItemSO.id == ItemID.Feather)
+        {
+            Debug.Log("Feather has been " + passedContext);
+            Debug.Log("Quantity is " + passedCount);
         }
     }
 
-    public void OnItemBought(ItemModel passedModel, int passedCount)
+    public void OnItemBought(ItemScriptableObject passedItemSO, int passedCount)//previously first parameter was ItemModel
     {
-        ItemController boughtItem = GetItemBasedOnId(passedModel.id);
+        ItemController boughtItem = GetItemBasedOnId(passedItemSO.id);
 
         if(boughtItem!=null)
             UpdateCountOfItem(boughtItem, passedCount, ItemContext.Buy);
         else
-            boughtItem = CreateNewItem(passedModel, passedCount);
+            boughtItem = CreateNewItem(passedItemSO, passedCount);
 
         UpdateCurrency(boughtItem, passedCount, ItemContext.Buy);
         UpdateWeight(boughtItem, passedCount, ItemContext.Buy);
     }
 
-    public void OnItemSold(ItemModel passedModel, int passedCount)
+    public void OnItemSold(ItemScriptableObject passeditemSO, int passedCount)//previously first parameter was ItemModel
     {
-        ItemController soldItem = GetItemBasedOnId(passedModel.id);
+        ItemController soldItem = GetItemBasedOnId(passeditemSO.id);
 
         if(soldItem != null)
         {
@@ -79,28 +86,32 @@ public class InventoryController
             UpdateWeight(soldItem, passedCount, ItemContext.Sell);
 
             //deleting item if all items are sold
-            if (soldItem.GetItemModel().quantity <= 0)
+            if (soldItem.HasNoItems())//previous code is soldItem.GetItemModel().quantity <= 0
                 DeleteItem(soldItem);
         }
     }
 
     private void UpdateCountOfItem(ItemController boughtItem,int _count,ItemContext _context)
     {
-        if(_context==ItemContext.Buy)
-            boughtItem.GetItemModel().quantity += _count;
-        else
-            boughtItem.GetItemModel().quantity -= _count;
+        //if (_context == ItemContext.Buy)
+        //    //boughtItem.GetItemModel().quantity += _count;//previous code is boughtItem.GetItemModel().quantity += _count;
+        //    boughtItem.UpdateInventoryItemQuantity(_count,_context);
+        //else
+        //    //boughtItem.GetItemModel().quantity -= _count;//previous code is boughtItem.GetItemModel().quantity -= _count;
+        //    boughtItem.UpdateInventoryItemQuantity(_count);
 
-        boughtItem.GetItemView().UpdateQuantityText();
+        boughtItem.UpdateInventoryItemQuantity(_count, _context);//this single line will take care of updating count of item in inventory
+
+        //boughtItem.GetItemView().UpdateQuantityText();
     }
 
     private void UpdateCurrency(ItemController _controller,int _count,ItemContext _context)
     {
         int changeInCurrency=0;
         if(_context==ItemContext.Buy)
-            changeInCurrency = -(_controller.GetItemModel().buyingPrice * _count);
+            changeInCurrency = -(_controller.GetBuyingPrice() * _count);//previous code - changeInCurrency = -(_controller.GetItemModel().buyingPrice * _count);
         else
-            changeInCurrency = +(_controller.GetItemModel().sellingPrice * _count);
+            changeInCurrency = +(_controller.GetSellingPrice() * _count);//previous code - changeInCurrency = +(_controller.GetItemModel().sellingPrice * _count);
 
         inventoryModel.UpdateCurrency(changeInCurrency);//updated change in currency
         inventoryView.UpdateCurrencyText();
@@ -110,9 +121,9 @@ public class InventoryController
     {
         int changeInWeight = 0;
         if (_context == ItemContext.Buy)
-            changeInWeight = +(_controller.GetItemModel().weight * _count);
+            changeInWeight = +(_controller.GetWeight() * _count);//previous code - changeInWeight = +(_controller.GetItemModel().weight * _count);
         else
-            changeInWeight = -(_controller.GetItemModel().weight * _count);
+            changeInWeight = -(_controller.GetWeight() * _count);
 
         inventoryModel.UpdateWeight(changeInWeight);
         inventoryView.UpdateWeightText();
@@ -123,7 +134,7 @@ public class InventoryController
         ItemController boughtItem = null;
         foreach (var item in inventoryModel.itemsList)
         {
-            if (item.GetItemModel().id == id)
+            if (item.GetID() == id) //previous condition - item.GetItemModel().id == id
             {
                 boughtItem = item;
                 break;
@@ -132,25 +143,34 @@ public class InventoryController
         return boughtItem;
     }
 
-    private ItemController CreateNewItem(ItemModel _model, int _count)
+    private ItemController CreateNewItem(ItemScriptableObject _itemSO, int _count)//previously first parameter was ItemModel
     {
-        ItemModel itemModel = new ItemModel(_model.id, _model.type, _model.rarity,
-                                                _model.icon, _model.description, _model.buyingPrice,
-                                                _model.sellingPrice, _model.weight, _count);
+        //ItemModel itemModel = new ItemModel(_model.id, _model.type, _model.rarity,
+        //                                        _model.icon, _model.description, _model.buyingPrice,
+        //                                        _model.sellingPrice, _model.weight, _count);
 
-        ItemController itemController = new ItemController(itemModel, inventoryView.itemButtonPrefab, inventoryView.itemButtonsParent.transform);
+        
+        ItemScriptableObject newItemSO = ScriptableObject.CreateInstance<ItemScriptableObject>();
+        JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(_itemSO), newItemSO);
+
+        newItemSO.quantity = _count;
+
+
+        ItemController itemController = new ItemController(newItemSO, inventoryView.itemButtonPrefab, inventoryView.itemButtonsParent.transform);//previously first parameter was ItemModel
 
         inventoryModel.itemsList.Add(itemController);
 
-        itemController.GetItemView().itemButton.onClick.AddListener(()=>OnItemButtonClicked(itemModel));
+        //itemController.GetItemView().itemButton.onClick.AddListener(()=>OnItemButtonClicked(newItemSO));
+        itemController.GetItemButton().onClick.AddListener(() => OnItemButtonClicked(newItemSO));
 
         return itemController;
     }
-    public void CreateNewItem(ItemModel _model)
+    public void CreateNewItem(ItemScriptableObject itemSO)//previously parameter was ItemModel
     {
-        ItemController itemController = new ItemController(_model, inventoryView.itemButtonPrefab, inventoryView.itemButtonsParent.transform);
+        ItemController itemController = new ItemController(itemSO, inventoryView.itemButtonPrefab, inventoryView.itemButtonsParent.transform);//first paramter was ItemModel
         inventoryModel.itemsList.Add(itemController);
-        itemController.GetItemView().itemButton.onClick.AddListener(() => OnItemButtonClicked(_model));
+        //itemController.GetItemView().itemButton.onClick.AddListener(() => OnItemButtonClicked(itemSO));//previously first parameter was ItemModel
+        itemController.GetItemButton().onClick.AddListener(() => OnItemButtonClicked(itemSO));
     }
 
     private void DeleteItem(ItemController toBeDeleted)

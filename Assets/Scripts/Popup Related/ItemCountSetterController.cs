@@ -11,7 +11,8 @@ public class ItemCountSetterController : MonoBehaviour
     //Data required for ItemCountSetterController
     private ItemContext itemContext;
     private int itemCount;
-    private ItemModel itemModel;
+    //private ItemModel itemModel;//this will be replaced by ItemScriptableObject
+    private ItemScriptableObject itemDetails;
 
     [SerializeField] private TextMeshProUGUI itemNameText;
     [SerializeField] private TextMeshProUGUI itemWeightText;
@@ -30,19 +31,19 @@ public class ItemCountSetterController : MonoBehaviour
     }
     private void OnEnable()
     {
-        confirmButton.onClick.AddListener(() => OnCountValueSet(itemModel, itemContext, itemCount));
+        confirmButton.onClick.AddListener(() => OnCountValueSet(itemDetails, itemContext, itemCount));//previously first parameter was ItemModel
     }
     private void OnDisable()
     {
         confirmButton.onClick.RemoveAllListeners();
     }
-    public void UpdateDetails(ItemModel _model, ItemContext _context)
+    public void UpdateDetails(ItemScriptableObject itemSO, ItemContext _context)//previously first parameter was ItemModel
     {
-        itemModel = _model;
+        itemDetails = itemSO;
         itemContext = _context;
         itemCount = 0;
-        itemNameText.text = _model.id.ToString();
-        itemIconImage.sprite = _model.icon;
+        itemNameText.text = itemSO.id.ToString();
+        itemIconImage.sprite = itemSO.icon;
 
         if (_context == ItemContext.Buy)
         {
@@ -84,16 +85,16 @@ public class ItemCountSetterController : MonoBehaviour
     private void UpdatePriceText()
     {
         if(itemContext == ItemContext.Buy)
-            itemPriceText.text = "Buying Price : "+ (itemModel.buyingPrice * itemCount);
+            itemPriceText.text = "Buying Price : "+ (itemDetails.buyingPrice * itemCount);
         else
-            itemPriceText.text = "Selling Price : " + (itemModel.sellingPrice * itemCount);
+            itemPriceText.text = "Selling Price : " + (itemDetails.sellingPrice * itemCount);
     }
     private void UpdateWeightText()
     {
         if (itemContext == ItemContext.Buy)
-            itemWeightText.text = "Weight Required : " + (itemModel.weight * itemCount);
+            itemWeightText.text = "Weight Required : " + (itemDetails.weight * itemCount);
         else
-            itemWeightText.text = "Weight Released : " + (itemModel.weight * itemCount);
+            itemWeightText.text = "Weight Released : " + (itemDetails.weight * itemCount);
     }
     private void Check()
     {
@@ -119,9 +120,9 @@ public class ItemCountSetterController : MonoBehaviour
         //Checks to limit addition of items based on Buy or Sell context
         if (itemContext == ItemContext.Buy)
         {
-            if (((itemCount + 1) * itemModel.buyingPrice > i_model.currency) ||
-                ((itemCount + 1) * itemModel.weight + i_model.currentWeight > i_model.maxWeight) ||
-                ((itemCount + 1) > itemModel.quantity))
+            if (((itemCount + 1) * itemDetails.buyingPrice > i_model.currency) ||
+                ((itemCount + 1) * itemDetails.weight + i_model.currentWeight > i_model.maxWeight) ||
+                ((itemCount + 1) > itemDetails.quantity))
             {
                 plusButton.interactable = false;
                 errorText.gameObject.SetActive(true);
@@ -134,7 +135,7 @@ public class ItemCountSetterController : MonoBehaviour
         }
         else if (itemContext == ItemContext.Sell)
         {
-            if (itemCount + 1 > itemModel.quantity)
+            if (itemCount + 1 > itemDetails.quantity)
             {
                 plusButton.interactable = false;
                 errorText.gameObject.SetActive(true);
@@ -146,9 +147,9 @@ public class ItemCountSetterController : MonoBehaviour
             }
         }
     }
-    private void OnCountValueSet(ItemModel _model, ItemContext _context, int _count)
+    private void OnCountValueSet(ItemScriptableObject itemSO, ItemContext _context, int _count)//previously first parameter was ItemModel
     {
         confirmationRequestController.gameObject.SetActive(true);
-        confirmationRequestController.UpdateDetails(_model, _context, _count);
+        confirmationRequestController.UpdateDetails(itemSO, _context, _count);//previously first parameter was ItemModel
     }
 }

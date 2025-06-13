@@ -18,14 +18,4 @@ public class ShopModel
     {
         shopController = _controller;
     }
-
-    //public ItemController GetItemController(ItemID id)//function to get a particular item from itemsList
-    //{
-    //    foreach (ItemController item in itemsList)
-    //    {
-    //        if (item.GetItemModel().id == id)
-    //            return item;
-    //    }
-    //    return null;
-    //}
 }

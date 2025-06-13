@@ -12,7 +12,8 @@ public class ConfirmationRequestController : MonoBehaviour
 
     //Data required for ConfirmationRequestController
     private int itemCount;
-    private ItemModel itemModel;
+    //private ItemModel itemModel;//this will be replaced by ItemScriptableObject
+    private ItemScriptableObject itemDetails;
     private ItemContext itemContext;
 
     //GameObject references
@@ -21,7 +22,7 @@ public class ConfirmationRequestController : MonoBehaviour
     [SerializeField] private Button yesButton;
     private void OnEnable()
     {
-        yesButton.onClick.AddListener(() => OnYesButtonClicked(itemModel, itemContext, itemCount));
+        yesButton.onClick.AddListener(() => OnYesButtonClicked(itemDetails, itemContext, itemCount));//previously first parameter was ItemModel
     }
     private void OnDisable()
     {
@@ -38,40 +39,41 @@ public class ConfirmationRequestController : MonoBehaviour
         this.transactionCompleteController = transactionCompleteController;
     }
 
-    public void UpdateDetails(ItemModel model, ItemContext context, int count)
+    public void UpdateDetails(ItemScriptableObject itemSO, ItemContext context, int count)//previously first parameter was ItemModel
     {
         itemCount = count;
-        itemModel = model;
+        //itemModel = model;
+        itemDetails = itemSO;
         itemContext = context;
 
-        itemIconImage.sprite = itemModel.icon;
-        confirmationText.text = "Are you sure you want to " + itemContext.ToString() + " " + itemCount + " " + itemModel.id.ToString() + "(s) for ";
+        itemIconImage.sprite = itemDetails.icon;
+        confirmationText.text = "Are you sure you want to " + itemContext.ToString() + " " + itemCount + " " + itemDetails.id.ToString() + "(s) for ";
 
         if (itemContext == ItemContext.Buy)
         {
-            confirmationText.text += (itemCount * itemModel.buyingPrice) + " gold?";
+            confirmationText.text += (itemCount * itemDetails.buyingPrice) + " gold?";
         }
         else
         {
-            confirmationText.text += (itemCount * itemModel.sellingPrice) + " gold?";
+            confirmationText.text += (itemCount * itemDetails.sellingPrice) + " gold?";
         }
     }
 
-    private void OnYesButtonClicked(ItemModel passedModel, ItemContext passedContext, int passedCount)
+    private void OnYesButtonClicked(ItemScriptableObject passedItemSO, ItemContext passedContext, int passedCount)//previously first parameter was ItemModel
     {
         SwitchOffPreviousPopUps();
-        PassDetailsToShopAndInventory(passedModel,passedContext,passedCount);
-        DisplayOverlayMessage(passedModel.id, passedContext);
+        PassDetailsToShopAndInventory(passedItemSO,passedContext,passedCount);
+        DisplayOverlayMessage(passedItemSO.id, passedContext);
     }
     private void SwitchOffPreviousPopUps()
     {
         itemDetailsController.gameObject.SetActive(false);
         itemCountSetterController.gameObject.SetActive(false);
     }
-    private void PassDetailsToShopAndInventory(ItemModel _model, ItemContext _context, int _count)
+    private void PassDetailsToShopAndInventory(ItemScriptableObject itemSO, ItemContext _context, int _count)//previously first parameter was ItemModel
     {
-        inventoryController.OnTransactionPerformed(_model, _context, _count);
-        shopController.OnTransactionPerformed(_model, _context, _count);
+        inventoryController.OnTransactionPerformed(itemSO, _context, _count);
+        shopController.OnTransactionPerformed(itemSO, _context, _count);
     }
     private void DisplayOverlayMessage(ItemID _id, ItemContext _context)
     {

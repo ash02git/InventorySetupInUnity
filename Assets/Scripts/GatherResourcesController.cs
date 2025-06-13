@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +8,7 @@ public class GatherResourcesController : MonoBehaviour
     [SerializeField] private Button button;
     [SerializeField] private GameObject failedText;
 
-    private List<ItemModel> itemsModelList;
+    private List<ItemScriptableObject> itemsSOList;
 
     private readonly int[] cumlativeValueNeededForDifferentItemRarities = { 0, 100, 150, 200, 300 };
     private readonly int[] probabilityOfDifferentItemTypes = { 100, 90, 50, 25, 10 };//verycommon-100%,common-90%,rare-50%,epic-25%,legendary-10%
@@ -19,13 +18,14 @@ public class GatherResourcesController : MonoBehaviour
 
     private List<ItemScriptableObject> itemsSO;
 
-    public void Init(InventoryController inventoryController, ShopController shop_controller, List<ItemScriptableObject> itemsSO)
+    public void Init(InventoryController inventoryController, ShopController shopController, List<ItemScriptableObject> itemsSO)
     {
         this.inventoryController = inventoryController;
-        this.shopController = shop_controller;
+        this.shopController = shopController;
         this.itemsSO = itemsSO;
 
-        itemsModelList = new List<ItemModel>();
+        //itemsModelList = new List<ItemModel>();
+        itemsSOList = new List<ItemScriptableObject>();
     }
 
     private void Start()
@@ -40,7 +40,7 @@ public class GatherResourcesController : MonoBehaviour
 
     private void OnGatherResources()
     {
-        int cumulativeWeightAfterGathering = GatherResourcesAsModels();
+        int cumulativeWeightAfterGathering = GatherResourcesAsItemSOs();
 
         if(!IsGatheredItemsOverWeight(cumulativeWeightAfterGathering))
         {
@@ -56,26 +56,29 @@ public class GatherResourcesController : MonoBehaviour
         }
     }
 
-    private int GatherResourcesAsModels()
+    private int GatherResourcesAsItemSOs()
     {
         int cumulativeValue = 0;
         int cumulativeWeight = 0;
 
-        for (int i = 1; i <= 5; i++)//5 ItemRarity Types
+        for (int i = 1; i <= 5; i++)//5 ItemRarity Types//replace with enum.getnumberofitemsinenum thing
         {
             if (IsItemRarityGatherable(cumulativeValue, i))//Checking if an item of rarity value i is attainable according to CumulativeValue math
             {
+                //Debug.Log((ItemRarity)i + " rarity is gatherable. Cumulative value is " + cumulativeValue);
                 foreach (ItemScriptableObject item in itemsSO)
                 {
                     if (item.rarity == (ItemRarity)i)//Selectively checking for particular Rarity
                     {
                         if (IsProbabilitySatisfied(i))//Checking if selected item's probability is met
                         {
-                            int numberOfItems = UnityEngine.Random.Range(0, item.quantity);
+                            //Debug.Log("Number of items as preset is " + item.quantity);
+                            int numberOfItems = Random.Range(0, item.quantity);
+                            //Debug.Log("Random item count generated is "+ numberOfItems);//comment to check working
 
                             if (numberOfItems != 0)
                             {
-                                CreateItemModel(item, numberOfItems);
+                                CreateItemSO(item, numberOfItems);
 
                                 cumulativeValue += numberOfItems * i;//here i is same as value assigned to each rarity type
                                 cumulativeWeight += numberOfItems * item.weight;
@@ -92,9 +95,9 @@ public class GatherResourcesController : MonoBehaviour
 
     private void CreateItemsInInventory(int cumulativeWeight)
     {
-        foreach (ItemModel itemModel in itemsModelList)
+        foreach (ItemScriptableObject itemSO in itemsSOList)//previous condition - ItemModel itemModel in itemsModelList
         {
-            inventoryController.CreateNewItem(itemModel);
+            inventoryController.CreateNewItem(itemSO);//previous parameter was itemModel
         }
         inventoryController.GetInventoryModel().UpdateWeight(cumulativeWeight);
         inventoryController.GetInventoryView().UpdateWeightText();
@@ -113,14 +116,21 @@ public class GatherResourcesController : MonoBehaviour
     
     private bool IsProbabilitySatisfied(int index) => ( UnityEngine.Random.Range(1, 101) > (100 - probabilityOfDifferentItemTypes[index - 1]) );
     
-    private void CreateItemModel(ItemScriptableObject item, int numberOfItems)
+    private void CreateItemSO(ItemScriptableObject item, int numberOfItems)
     {
-        ItemModel newModel = new ItemModel(item.id, item.type, item.rarity,
-                                                               item.icon, item.description, item.buyingPrice,
-                                                               item.sellingPrice, item.weight, numberOfItems);
+        //ItemModel newModel = new ItemModel(item.id, item.type, item.rarity,
+        //                                                       item.icon, item.description, item.buyingPrice,
+        //                                                       item.sellingPrice, item.weight, numberOfItems);
+        ItemScriptableObject newItemSO = ScriptableObject.CreateInstance<ItemScriptableObject>();
+        JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(item), newItemSO);
 
-        itemsModelList.Add(newModel);
+        newItemSO.quantity = numberOfItems;//important line
+
+        //itemsModelList.Add(newModel);//previously first parameter was ItemModel
+        itemsSOList.Add(newItemSO);
     }
-    private void ClearItemsList()=>itemsModelList.Clear();
+
+    private void ClearItemsList()=>itemsSOList.Clear();
+
     private void DestroyGatherResourcesButton() => Destroy(gameObject);
 }

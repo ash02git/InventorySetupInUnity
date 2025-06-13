@@ -35,15 +35,6 @@ public class ShopController
         CreateItemButtons(itemsSO);
     }
 
-    public ShopView GetShopView()//maybe not needed
-    {
-        return shopView;
-    }
-    public ShopModel GetShopModel()//maybe not needed
-    {
-        return shopModel;
-    }
-
     private void CreateItemTypeTabs()
     {
         foreach (ItemType value in Enum.GetValues(typeof(ItemType)))
@@ -53,21 +44,24 @@ public class ShopController
             tabButton.onClick.AddListener(() => SetOnlyRequiredTypeVisible(value));
         }
     }
+
     private void CreateItemButtons(List<ItemScriptableObject> itemsSO)
     {
         foreach (ItemScriptableObject value in itemsSO)
         {
-            ItemModel itemModel = new ItemModel(value.id,
-                value.type, value.rarity, value.icon,
-                value.description, value.buyingPrice,
-                value.sellingPrice, value.weight, value.quantity);
+            ItemScriptableObject newItemSO = ScriptableObject.CreateInstance<ItemScriptableObject>();
+            JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(value), newItemSO);
 
-            ItemController itemController = new ItemController(itemModel, shopView.itemButtonPrefab, shopView.itemButtonsParent);
-            itemController.GetItemView().itemButton.interactable = false;   
+                Debug.Log(newItemSO.id + " created");
+                Debug.Log(newItemSO.id + " quantity = " +  newItemSO.quantity);
+
+            ItemController itemController = new ItemController(newItemSO, shopView.itemButtonPrefab, shopView.itemButtonsParent);
+            //itemController.GetItemView().itemButton.interactable = false;  
+            itemController.SetItemButtonNonInteractable();
 
             shopModel.itemsList.Add(itemController);
 
-            itemController.GetItemView().itemButton.onClick.AddListener(() => OnItemButtonClicked(itemModel));
+            itemController.GetItemButton().onClick.AddListener(() => OnItemButtonClicked(newItemSO));//previously first parameter was ItemModel
         }
         SetOnlyRequiredTypeVisible(ItemType.Materials);//initially only showing Material Items
     }
@@ -75,26 +69,36 @@ public class ShopController
     {
         foreach (var item in shopModel.itemsList)
         {
-            if (item.GetItemModel().type == _type)
+            if (item.GetItemType() == _type)//previous condition - item.GetItemModel().type == _type
             {
-                item.GetItemView().gameObject.SetActive(true);
+                //item.GetItemView().gameObject.SetActive(true);
+                item.ShowItemButton();
             }
             else
-                item.GetItemView().gameObject.SetActive(false);
+            {
+                //item.GetItemView().gameObject.SetActive(false);
+                item.HideItemButton();
+            }
         }
     }
 
-    private void OnItemButtonClicked(ItemModel _model)
+    private void OnItemButtonClicked(ItemScriptableObject itemSO)//previously first parameter was ItemModel
     {
+        //if(itemSO.id == ItemID.Feather)
+        //{
+        //    Debug.Log("Feather is clicked");
+        //    Debug.Log("Feather quantity = " + itemSO.quantity);
+        //}
+        
         itemDetailsController.gameObject.SetActive(true);
-        itemDetailsController.UpdateDetails(_model, ItemContext.Buy);//item button clicked from shop will be Buy Action
+        itemDetailsController.UpdateDetails(itemSO, ItemContext.Buy);//previously first parameter was ItemModel
     }
     private ItemController GetItemBasedOnId(ItemID id)
     {
         ItemController boughtItem = null;
         foreach(var item in shopModel.itemsList)
         {
-            if(item.GetItemModel().id == id)
+            if(item.GetID() == id)//previous code - item.GetItemModel().id == id
             {
                 boughtItem= item;
                 break;
@@ -103,23 +107,33 @@ public class ShopController
         return boughtItem;
     }
 
-    public void OnTransactionPerformed(ItemModel passedModel, ItemContext _context, int _count)
+    public void OnTransactionPerformed(ItemScriptableObject passedItemSO, ItemContext passedContext, int passedCount)//previously first parameter was ItemModel
     {
-        ItemController tradedItem = GetItemBasedOnId(passedModel.id);
-        UpdateChangesOnTradedItem(tradedItem,_context, _count);
+        ItemController tradedItem = GetItemBasedOnId(passedItemSO.id);
+        UpdateChangesOnTradedItem(tradedItem,passedContext, passedCount);
         DisplayChangesOnTradedItem(tradedItem);//, _context);//,_count);
+
+        if (passedItemSO.id == ItemID.Feather)
+        {
+            Debug.Log("Feather has been " + passedContext);
+            Debug.Log("Quantity is " + passedCount);
+        }
     }
     private void UpdateChangesOnTradedItem(ItemController tradedItem, ItemContext _context, int _count)
     {
-        switch (_context)
-        {
-            case ItemContext.Buy:
-                tradedItem.GetItemModel().quantity = tradedItem.GetItemModel().quantity - _count;
-                break;
-            case ItemContext.Sell:
-                tradedItem.GetItemModel().quantity = tradedItem.GetItemModel().quantity + _count;
-                break;
-        }
+        //switch (_context)
+        //{
+        //    case ItemContext.Buy:
+        //        //tradedItem.GetItemModel().quantity = tradedItem.GetItemModel().quantity - _count;
+        //        tradedItem.UpdateShopItemQuantity(_count);
+        //        break;
+        //    case ItemContext.Sell:
+        //        //tradedItem.GetItemModel().quantity = tradedItem.GetItemModel().quantity + _count;
+        //        tradedItem.UpdateInventoryItemQuantity(_count);
+        //        break;
+        //}
+        Debug.Log("Updating changes on feather");
+        tradedItem.UpdateShopItemQuantity(_count, _context);////this single line will take care of updating count of item in shop
     }
     private void DisplayChangesOnTradedItem(ItemController tradedItem)//,ItemContext _context)//, int _count)
     {
@@ -130,7 +144,8 @@ public class ShopController
     {
         foreach(ItemController item in shopModel.itemsList)
         {
-            item.GetItemView().itemButton.interactable = true;
+            //item.GetItemView().itemButton.interactable = true;
+            item.SetItemButtonInteractable();
         }
     }
 }

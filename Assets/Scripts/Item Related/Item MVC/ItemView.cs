@@ -8,22 +8,24 @@ public class ItemView : MonoBehaviour
     private ItemController itemController;
 
     //reference to components
-    public Button itemButton;
-    public Image iconImage;
-    public TextMeshProUGUI quantityText;
+    [SerializeField] private Button itemButton;
+    [SerializeField] private Image iconImage;
+    [SerializeField] private TextMeshProUGUI quantityText;
 
     public void SetItemController(ItemController itemController)=> this.itemController = itemController;
 
-    public ItemModel GetItemModel()=> itemController.GetItemModel();
-
     private void Start()
     {
-        ItemModel _model = GetItemModel();
-        iconImage.sprite = _model.icon;
-        quantityText.text = "x " + _model.quantity;
+        iconImage.sprite = itemController.GetIcon();
+        quantityText.text = "x" + itemController.GetQuantity();
     }
 
-    public void UpdateQuantityText() => quantityText.text = "x " + GetItemModel().quantity;
+    public Button GetItemButton() => itemButton;
+
+    public void UpdateQuantityText() => quantityText.text = "x " + itemController.GetQuantity();
+
+    public void SetItemButtonNonInteractable() => itemButton.interactable = false;
+    public void SetItemButtonInteractable() => itemButton.interactable = true;
 
     private void OnDestroy() => itemButton.onClick.RemoveAllListeners();
 }
