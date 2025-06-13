@@ -11,7 +11,6 @@ public class ItemCountSetterController : MonoBehaviour
     //Data required for ItemCountSetterController
     private ItemContext itemContext;
     private int itemCount;
-    //private ItemModel itemModel;//this will be replaced by ItemScriptableObject
     private ItemScriptableObject itemDetails;
 
     [SerializeField] private TextMeshProUGUI itemNameText;
@@ -21,7 +20,7 @@ public class ItemCountSetterController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI itemQuantityText;
     [SerializeField] private Button plusButton;
     [SerializeField] private Button minusButton;
-    [SerializeField] private Button confirmButton;
+    [SerializeField] private Button confirmButton;//most important Component in ItemCountSetterController
     [SerializeField] private TextMeshProUGUI errorText;
 
     public void Init(ConfirmationRequestController confirmationRequestController, InventoryController inventoryController)
@@ -29,15 +28,22 @@ public class ItemCountSetterController : MonoBehaviour
         this.confirmationRequestController = confirmationRequestController;
         this.inventoryController = inventoryController;
     }
+
     private void OnEnable()
     {
-        confirmButton.onClick.AddListener(() => OnCountValueSet(itemDetails, itemContext, itemCount));//previously first parameter was ItemModel
+        confirmButton.onClick.AddListener(() => OnCountValueSet(itemDetails, itemContext, itemCount));
+        minusButton.onClick.AddListener(() => OnMinusButtonClicked());
+        plusButton.onClick.AddListener(() => OnPlusButtonClicked());
     }
+
     private void OnDisable()
     {
-        confirmButton.onClick.RemoveAllListeners();
+        confirmButton.onClick.RemoveListener(() => OnCountValueSet(itemDetails, itemContext, itemCount));
+        minusButton.onClick.RemoveListener(() => OnMinusButtonClicked());
+        plusButton.onClick.RemoveListener(() => OnPlusButtonClicked());
     }
-    public void UpdateDetails(ItemScriptableObject itemSO, ItemContext _context)//previously first parameter was ItemModel
+
+    public void UpdateDetails(ItemScriptableObject itemSO, ItemContext _context)
     {
         itemDetails = itemSO;
         itemContext = _context;
@@ -57,31 +63,35 @@ public class ItemCountSetterController : MonoBehaviour
         }
         
         UpdateQuantityText();
-
-        Check();
+        Check();//does the checks to determine whether items can be added or subtracted
     }
-    public void PlusQuantity()
+
+    public void OnPlusButtonClicked()
     {
         itemCount++;
         UpdateTextChanges();
         Check();//does the checks to determine whether items can be added or subtracted
     }
-    public void MinusQuantity()
+
+    public void OnMinusButtonClicked()
     {
         itemCount--;
         UpdateTextChanges();
         Check();//does the checks to determine whether items can be added or subtracted
     }
+
     private void UpdateTextChanges()
     {
         UpdateQuantityText();
         UpdatePriceText();
         UpdateWeightText();
     }
+
     private void UpdateQuantityText()
     {
         itemQuantityText.text = itemCount.ToString();
     }
+
     private void UpdatePriceText()
     {
         if(itemContext == ItemContext.Buy)
@@ -89,6 +99,7 @@ public class ItemCountSetterController : MonoBehaviour
         else
             itemPriceText.text = "Selling Price : " + (itemDetails.sellingPrice * itemCount);
     }
+
     private void UpdateWeightText()
     {
         if (itemContext == ItemContext.Buy)
@@ -96,11 +107,13 @@ public class ItemCountSetterController : MonoBehaviour
         else
             itemWeightText.text = "Weight Released : " + (itemDetails.weight * itemCount);
     }
+
     private void Check()
     {
         CheckForMinusButtonInteractability();
         CheckForPlusButtonInteractability();
     }
+
     private void CheckForMinusButtonInteractability()
     {
         if (itemCount == 0)
@@ -114,15 +127,15 @@ public class ItemCountSetterController : MonoBehaviour
             confirmButton.interactable = true;
         }
     }
+
     private void CheckForPlusButtonInteractability()
     {
-        //InventoryModel i_model = inventoryController.GetInventoryModel();
         //Checks to limit addition of items based on Buy or Sell context
         if (itemContext == ItemContext.Buy)
         {
-            if (((itemCount + 1) * itemDetails.buyingPrice > inventoryController.GetCurrency()) ||
-                ((itemCount + 1) * itemDetails.weight + inventoryController.GetCurrentWeight()  > inventoryController.GetMaxWeight() ) ||
-                ((itemCount + 1) > itemDetails.quantity))
+            if (((itemCount + 1) * itemDetails.buyingPrice > inventoryController.GetCurrency()) || //check if enough currency is there
+                ((itemCount + 1) * itemDetails.weight + inventoryController.GetCurrentWeight()  > inventoryController.GetMaxWeight() ) || //check if max weight is not breached
+                ((itemCount + 1) > itemDetails.quantity)) //check if enough items are there
             {
                 plusButton.interactable = false;
                 errorText.gameObject.SetActive(true);
@@ -147,9 +160,10 @@ public class ItemCountSetterController : MonoBehaviour
             }
         }
     }
-    private void OnCountValueSet(ItemScriptableObject itemSO, ItemContext _context, int _count)//previously first parameter was ItemModel
+
+    private void OnCountValueSet(ItemScriptableObject itemSO, ItemContext _context, int _count)
     {
         confirmationRequestController.gameObject.SetActive(true);
-        confirmationRequestController.UpdateDetails(itemSO, _context, _count);//previously first parameter was ItemModel
+        confirmationRequestController.UpdateDetails(itemSO, _context, _count);
     }
 }
