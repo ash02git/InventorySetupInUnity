@@ -32,15 +32,19 @@ public class ItemCountSetterController : MonoBehaviour
     private void OnEnable()
     {
         confirmButton.onClick.AddListener(() => OnCountValueSet(itemDetails, itemContext, itemCount));
-        minusButton.onClick.AddListener(() => OnMinusButtonClicked());
-        plusButton.onClick.AddListener(() => OnPlusButtonClicked());
+        minusButton.onClick.AddListener(OnMinusButtonClicked);
+        plusButton.onClick.AddListener(OnPlusButtonClicked);
+
+        EventService.Instance.OnTransactionCompleted.AddListener(OnTransactionCompleted);//maybe make this as a function
     }
 
     private void OnDisable()
     {
         confirmButton.onClick.RemoveListener(() => OnCountValueSet(itemDetails, itemContext, itemCount));
-        minusButton.onClick.RemoveListener(() => OnMinusButtonClicked());
-        plusButton.onClick.RemoveListener(() => OnPlusButtonClicked());
+        minusButton.onClick.RemoveListener(OnMinusButtonClicked);
+        plusButton.onClick.RemoveListener(OnPlusButtonClicked);
+
+        EventService.Instance.OnTransactionCompleted.RemoveListener(OnTransactionCompleted);
     }
 
     public void UpdateDetails(ItemScriptableObject itemSO, ItemContext _context)
@@ -166,4 +170,6 @@ public class ItemCountSetterController : MonoBehaviour
         confirmationRequestController.gameObject.SetActive(true);
         confirmationRequestController.UpdateDetails(itemSO, _context, _count);
     }
+
+    private void OnTransactionCompleted() => gameObject.SetActive(false);
 }

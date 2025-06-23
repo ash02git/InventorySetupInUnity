@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 643c527b77fc7b048a9a881c9e1a7a99, type: 3}
-  m_Name: Gold Chest
+  m_Name: Knife
   m_EditorClassIdentifier: 
-  id: 5
-  type: 3
-  rarity: 3
-  icon: {fileID: 21300000, guid: b3b4ac224a8d3b54eb09b621af20e1b6, type: 3}
-  description: Gold Chest buried throughout the world by ancestors.
-  buyingPrice: 150
-  sellingPrice: 130
-  weight: 50
-  quantity: 10
+  id: 8
+  type: 1
+  rarity: 2
+  itemPlace: 0
+  icon: {fileID: 21300000, guid: 4111d0c77abb5e54495766dd3d4ab107, type: 3}
+  description: A smaller blade that is used for stealth kills.
+  buyingPrice: 30
+  sellingPrice: 20
+  weight: 3
+  quantity: 50

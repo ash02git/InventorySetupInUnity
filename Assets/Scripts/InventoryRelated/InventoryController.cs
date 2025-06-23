@@ -53,18 +53,18 @@ public class InventoryController
         itemDetailsController.UpdateDetails(itemSO, ItemContext.Sell);
     }
 
-    public void OnTransactionPerformed(ItemScriptableObject passedItemSO, ItemContext passedContext, int passedCount)
-    {
-        switch (passedContext)
-        {
-            case ItemContext.Sell:
-                OnItemSold(passedItemSO, passedCount);
-                break;
-            case ItemContext.Buy:
-                OnItemBought(passedItemSO, passedCount);
-                break;
-        }
-    }
+    //public void OnTransactionPerformed(ItemScriptableObject passedItemSO, ItemContext passedContext, int passedCount)
+    //{
+    //    switch (passedContext)
+    //    {
+    //        case ItemContext.Sell:
+    //            OnItemSold(passedItemSO, passedCount);
+    //            break;
+    //        case ItemContext.Buy:
+    //            OnItemBought(passedItemSO, passedCount);
+    //            break;
+    //    }
+    //}
 
     public void OnItemBought(ItemScriptableObject passedItemSO, int passedCount)
     {
@@ -142,6 +142,7 @@ public class InventoryController
         JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(_itemSO), newItemSO);
 
         newItemSO.quantity = _count;
+        newItemSO.itemPlace = ItemPlace.InInventory;
 
         ItemController itemController = new ItemController(newItemSO, inventoryView.itemButtonPrefab, inventoryView.itemButtonsParent.transform);
         AddItemToInventory(itemController);

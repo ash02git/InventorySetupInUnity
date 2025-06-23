@@ -24,9 +24,17 @@ public class ItemDetailsController : MonoBehaviour
 
     public void Init(ItemCountSetterController itemCountSetterController) => this.itemCountSetterController = itemCountSetterController;
 
-    private void OnEnable() => actionButton.onClick.AddListener(() => OnActionButtonClicked(itemDetails, itemContext));
+    private void OnEnable()
+    {
+        actionButton.onClick.AddListener(() => OnActionButtonClicked(itemDetails, itemContext));
+        EventService.Instance.OnTransactionCompleted.AddListener(OnTransactionCompleted);//maybe make this as a function
+    }
 
-    private void OnDisable() => actionButton.onClick.RemoveAllListeners();
+    private void OnDisable()
+    {
+        actionButton.onClick.RemoveAllListeners();
+        EventService.Instance.OnTransactionCompleted.RemoveListener(OnTransactionCompleted);
+    }
 
     public void UpdateDetails(ItemScriptableObject itemSO, ItemContext itemContext)
     {
@@ -59,4 +67,6 @@ public class ItemDetailsController : MonoBehaviour
         itemCountSetterController.gameObject.SetActive(true);
         itemCountSetterController.UpdateDetails(itemSO, _context);
     }
+
+    private void OnTransactionCompleted() => gameObject.SetActive(false);
 }

@@ -115,6 +115,7 @@ public class GatherResourcesController : MonoBehaviour
         JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(item), newItemSO);
 
         newItemSO.quantity = numberOfItems;
+        newItemSO.itemPlace = ItemPlace.InInventory;
 
         gatheredItemsSOList.Add(newItemSO);
     }

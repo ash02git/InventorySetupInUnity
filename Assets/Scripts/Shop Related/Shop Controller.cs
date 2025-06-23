@@ -21,7 +21,7 @@ public class ShopController
         shopView.SetShopController(this);
         CreateShop(itemsSO);
     }
-
+    
     public void Init( ItemDetailsController itemDetailsController ) => this.itemDetailsController = itemDetailsController;
 
     public List<ItemController> GetItemsList() => shopModel.GetItemsList();
@@ -91,16 +91,43 @@ public class ShopController
         return boughtItem;
     }
 
-    public void OnTransactionPerformed(ItemScriptableObject passedItemSO, ItemContext passedContext, int passedCount)
+    //public void OnTransactionPerformed(ItemScriptableObject passedItemSO, ItemContext passedContext, int passedCount)
+    //{
+    //    ItemController tradedItem = GetItemBasedOnId(passedItemSO.id);
+    //    UpdateChangesOnTradedItem(tradedItem,passedContext, passedCount);
+    //    DisplayChangesOnTradedItem(tradedItem);
+    //}
+
+    public void OnItemSold(ItemScriptableObject passeditemSO, int passedCount)
     {
-        ItemController tradedItem = GetItemBasedOnId(passedItemSO.id);
-        UpdateChangesOnTradedItem(tradedItem,passedContext, passedCount);
-        DisplayChangesOnTradedItem(tradedItem);
+        ItemController soldItem = GetItemBasedOnId(passeditemSO.id);
+
+        if (soldItem != null)
+        {
+            //updating details when item is sold
+            UpdateCountOfItem(soldItem, passedCount, ItemContext.Sell);
+            //UpdateCurrency(soldItem, passedCount, ItemContext.Sell);
+            //UpdateWeight(soldItem, passedCount, ItemContext.Sell);
+
+            //deleting item if all items are sold
+            //if (soldItem.HasNoItems())//previous code is soldItem.GetItemModel().quantity <= 0
+                //DeleteItem(soldItem);
+        }
     }
 
-    private void UpdateChangesOnTradedItem(ItemController tradedItem, ItemContext _context, int _count) => tradedItem.UpdateShopItemQuantity(_count, _context);
+    public void OnItemBought(ItemScriptableObject passedItemSO, int passedCount)
+    {
+        ItemController boughtItem = GetItemBasedOnId(passedItemSO.id);
 
-    private void DisplayChangesOnTradedItem(ItemController tradedItem) => tradedItem.DisplayChangedQuantityText();
+        if (boughtItem != null)
+            UpdateCountOfItem(boughtItem, passedCount, ItemContext.Buy);
+    }
+
+    private void UpdateCountOfItem(ItemController boughtItem, int _count, ItemContext _context) => boughtItem.UpdateShopItemQuantity(_count, _context);
+
+    //private void UpdateChangesOnTradedItem(ItemController tradedItem, ItemContext _context, int _count) => tradedItem.UpdateShopItemQuantity(_count, _context);
+
+    //private void DisplayChangesOnTradedItem(ItemController tradedItem) => tradedItem.DisplayChangedQuantityText();
 
     public void MakeItemButtonsInteractable()
     {

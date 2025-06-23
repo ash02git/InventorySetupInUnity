@@ -6,6 +6,7 @@ public class ItemScriptableObject:ScriptableObject
     public ItemID id;
     public ItemType type;
     public ItemRarity rarity;
+    public ItemPlace itemPlace;
     public Sprite icon;
     public string description;
     public int buyingPrice;
