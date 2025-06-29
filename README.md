@@ -1,3 +1,6 @@
+**FOR THE REVIEWER:- PLS CHECKOUT 'Corrections' branch for the code base with corrections implemented from previous review. **
+**FOR THE REVIEWER:- PLS CHECKOUT 'Corrections' branch for the code base with corrections implemented from previous review. **
+
 This Project is done as part of an Outscal assessment test.
 It is a Shop and Inventory Setup done in Unity.
 
