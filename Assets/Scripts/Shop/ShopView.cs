@@ -1,21 +1,25 @@
 using UnityEngine;
 using UnityEngine.UI;
+using ShopAndInventory.Item;
 
-public class ShopView : MonoBehaviour
+namespace ShopAndInventory.Shop
 {
-    //reference to ShopController
-    private ShopController shopController;
-
-    //references to GameObjects
-    [SerializeField] public Transform itemTypeTabsParent;
-    [SerializeField] public Transform itemButtonsParent;
-
-    //Prefabs
-    [SerializeField] public Button itemTypeTabPrefab;
-    [SerializeField] public ItemView itemButtonPrefab;
-
-    public void SetShopController(ShopController _controller)
+    public class ShopView : MonoBehaviour
     {
-        shopController = _controller;
+        //reference to ShopController
+        private ShopController shopController;
+
+        //references to GameObjects
+        [SerializeField] public Transform itemTypeTabsParent;
+        [SerializeField] public Transform itemButtonsParent;
+
+        //Prefabs
+        [SerializeField] public Button itemTypeTabPrefab;
+        [SerializeField] public ItemView itemButtonPrefab;
+
+        public void SetShopController(ShopController _controller)
+        {
+            shopController = _controller;
+        }
     }
 }

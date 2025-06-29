@@ -1,15 +1,19 @@
 using System.Collections.Generic;
+using ShopAndInventory.Item;
 
-public class ShopModel
+namespace ShopAndInventory.Shop
 {
-    private List<ItemController> itemsList;
-
-    public ShopModel()
+    public class ShopModel
     {
-        itemsList = new List<ItemController>();
+        private List<ItemController> itemsList;
+
+        public ShopModel()
+        {
+            itemsList = new List<ItemController>();
+        }
+
+        public List<ItemController> GetItemsList() => itemsList;
+
+        public void AddItem(ItemController toBeAdded) => itemsList.Add(toBeAdded);
     }
-
-    public List<ItemController> GetItemsList() => itemsList;
-
-    public void AddItem(ItemController toBeAdded) => itemsList.Add(toBeAdded);
 }

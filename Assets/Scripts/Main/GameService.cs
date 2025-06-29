@@ -1,45 +1,55 @@
 using System.Collections.Generic;
 using UnityEngine;
+using ShopAndInventory.Events;
+using ShopAndInventory.Inventory;
+using ShopAndInventory.GatherResources;
+using ShopAndInventory.Item;
+using ShopAndInventory.Popup;
+using ShopAndInventory.Shop;
+using ShopAndInventory.Utilities;
 
-public class GameService : GenericMonoSingleton<GameService>
+namespace ShopAndInventory.Main
 {
-    //Services
-    public EventService EventService { get; private set; }
-    public ShopService ShopService { get; private set; }
-    public InventoryService InventoryService { get; private set; }
-    public PopupService PopupService { get; private set; }
-
-    private GatherResourcesController gatherResourcesController;//one time use button
-    
-    [Header("Item Scriptable Objects")]
-    [SerializeField]private List<ItemScriptableObject> itemsSOList;
-
-    [Header("Shop and Inventory Prefabs")]
-    [SerializeField] private ShopView shopPrefab;
-    [SerializeField] private InventoryView inventoryPrefab;
-    [SerializeField] private GatherResourcesController gatherResourcesPrefab;
-    [SerializeField] private ItemDetailsController itemDetailsPrefab;
-    [SerializeField] private ItemCountSetterController itemCountSetterPrefab;
-    [SerializeField] private ConfirmationRequestController confirmationRequestPrefab;
-    [SerializeField] private TransactionCompleteController transactionCompletePrefab;
-
-    [Header("Scene References")]
-    [SerializeField] private Transform shopAndInventoryParent;
-
-    private void Start() => CreateServices();
-
-    private void CreateServices()
+    public class GameService : GenericMonoSingleton<GameService>
     {
-        EventService = new EventService();
+        //Services
+        public EventService EventService { get; private set; }
+        public ShopService ShopService { get; private set; }
+        public InventoryService InventoryService { get; private set; }
+        public PopupService PopupService { get; private set; }
 
-        ShopService = new ShopService(itemsSOList, shopPrefab, shopAndInventoryParent);
+        private GatherResourcesController gatherResourcesController;//one time use button
 
-        InventoryService = new InventoryService(inventoryPrefab, shopAndInventoryParent);
+        [Header("Item Scriptable Objects")]
+        [SerializeField] private List<ItemScriptableObject> itemsSOList;
 
-        PopupService = new PopupService(itemDetailsPrefab, itemCountSetterPrefab, 
-            confirmationRequestPrefab, transactionCompletePrefab, shopAndInventoryParent);
+        [Header("Shop and Inventory Prefabs")]
+        [SerializeField] private ShopView shopPrefab;
+        [SerializeField] private InventoryView inventoryPrefab;
+        [SerializeField] private GatherResourcesController gatherResourcesPrefab;
+        [SerializeField] private ItemDetailsController itemDetailsPrefab;
+        [SerializeField] private ItemCountSetterController itemCountSetterPrefab;
+        [SerializeField] private ConfirmationRequestController confirmationRequestPrefab;
+        [SerializeField] private TransactionCompleteController transactionCompletePrefab;
 
-        gatherResourcesController = GameObject.Instantiate(gatherResourcesPrefab,shopAndInventoryParent);
-        gatherResourcesController.Initialize(itemsSOList);
+        [Header("Scene References")]
+        [SerializeField] private Transform shopAndInventoryParent;
+
+        private void Start() => CreateServices();
+
+        private void CreateServices()
+        {
+            EventService = new EventService();
+
+            ShopService = new ShopService(itemsSOList, shopPrefab, shopAndInventoryParent);
+
+            InventoryService = new InventoryService(inventoryPrefab, shopAndInventoryParent);
+
+            PopupService = new PopupService(itemDetailsPrefab, itemCountSetterPrefab,
+                confirmationRequestPrefab, transactionCompletePrefab, shopAndInventoryParent);
+
+            gatherResourcesController = GameObject.Instantiate(gatherResourcesPrefab, shopAndInventoryParent);
+            gatherResourcesController.Initialize(itemsSOList);
+        }
     }
 }

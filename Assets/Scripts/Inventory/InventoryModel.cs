@@ -1,39 +1,44 @@
 using System.Collections.Generic;
-public class InventoryModel
+using ShopAndInventory.Item;
+
+namespace ShopAndInventory.Inventory
 {
-    //list of all items in Inventory
-    private List<ItemController> itemsList;
-
-    //Data specific to inventory
-    private int currency;
-    private int maxWeight;
-    private int currentWeight;
-
-    public InventoryModel()
+    public class InventoryModel
     {
-        itemsList = new List<ItemController>();
-        currency = 0;
-        maxWeight = 1000;
-        currentWeight = 0;
-    }
+        //list of all items in Inventory
+        private List<ItemController> itemsList;
 
-    public int GetCurrency() => currency;
+        //Data specific to inventory
+        private int currency;
+        private int maxWeight;
+        private int currentWeight;
 
-    public int GetMaxWeight() => maxWeight;
+        public InventoryModel()
+        {
+            itemsList = new List<ItemController>();
+            currency = 0;
+            maxWeight = 1000;
+            currentWeight = 0;
+        }
 
-    public int GetCurrentWeight() => currentWeight;
+        public int GetCurrency() => currency;
 
-    public List<ItemController> GetItemsList() => itemsList;
+        public int GetMaxWeight() => maxWeight;
 
-    public void UpdateCurrency(int value) => currency += value;
+        public int GetCurrentWeight() => currentWeight;
 
-    public void UpdateWeight(int value) => currentWeight += value;
+        public List<ItemController> GetItemsList() => itemsList;
 
-    public void AddItem(ItemController toBeAdded) => itemsList.Add(toBeAdded);
+        public void UpdateCurrency(int value) => currency += value;
 
-    public void RemoveItem(ItemController toBeDeleted)
-    {
-        itemsList.Remove(toBeDeleted);
-        toBeDeleted.DestroyItem();
+        public void UpdateWeight(int value) => currentWeight += value;
+
+        public void AddItem(ItemController toBeAdded) => itemsList.Add(toBeAdded);
+
+        public void RemoveItem(ItemController toBeDeleted)
+        {
+            itemsList.Remove(toBeDeleted);
+            toBeDeleted.DestroyItem();
+        }
     }
 }

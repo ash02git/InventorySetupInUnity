@@ -1,5 +1,8 @@
-public enum DoableAction
+namespace ShopAndInventory.Item
 {
-    Buy,
-    Sell
+    public enum DoableAction
+    {
+        Buy,
+        Sell
+    }
 }

@@ -1,19 +1,22 @@
 using UnityEngine;
 
-public class GenericMonoSingleton<T> : MonoBehaviour where T : GenericMonoSingleton<T>
+namespace ShopAndInventory.Utilities
 {
-    private static T instance;
-    public static T Instance { get { return instance; } }
-
-    protected virtual void Awake()
+    public class GenericMonoSingleton<T> : MonoBehaviour where T : GenericMonoSingleton<T>
     {
-        if (instance == null)
+        private static T instance;
+        public static T Instance { get { return instance; } }
+
+        protected virtual void Awake()
         {
-            instance = (T)this;
-        }
-        else
-        {
-            Destroy(gameObject);
+            if (instance == null)
+            {
+                instance = (T)this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

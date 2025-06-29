@@ -1,7 +1,10 @@
-public enum ItemType
+namespace ShopAndInventory.Item
 {
-    Materials,
-    Weapons,
-    Consumables,
-    Treasures
+    public enum ItemType
+    {
+        Materials,
+        Weapons,
+        Consumables,
+        Treasures
+    }
 }
