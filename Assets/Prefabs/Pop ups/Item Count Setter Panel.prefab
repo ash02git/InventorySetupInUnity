@@ -127,7 +127,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 2
@@ -925,19 +925,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1687572099481599478}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8179910932815332592}
-        m_TargetAssemblyTypeName: ItemCountSetterController, Assembly-CSharp
-        m_MethodName: PlusQuantity
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &4987675587102377880
 GameObject:
   m_ObjectHideFlags: 0
@@ -1594,19 +1582,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2047410175667084359}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8179910932815332592}
-        m_TargetAssemblyTypeName: ItemCountSetterController, Assembly-CSharp
-        m_MethodName: MinusQuantity
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &6945317561039064264
 GameObject:
   m_ObjectHideFlags: 0

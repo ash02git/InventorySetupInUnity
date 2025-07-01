@@ -226,9 +226,8 @@ GameObject:
   - component: {fileID: 1220667649}
   - component: {fileID: 1220667648}
   - component: {fileID: 1220667647}
-  - component: {fileID: 1220667651}
   m_Layer: 5
-  m_Name: UI Canvas
+  m_Name: Shop And Inventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -316,37 +315,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1220667651
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1220667646}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b15bce7deafc8c3498aef5830e20827e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemsSO:
-  - {fileID: 11400000, guid: ea176595ddcb5984bb38cbc66eda400e, type: 2}
-  - {fileID: 11400000, guid: 9a58918e3f9cf954f8cd076e5d84711e, type: 2}
-  - {fileID: 11400000, guid: 8ce7270a1c5a4294d808445e6210a21c, type: 2}
-  - {fileID: 11400000, guid: d88f75734d3e13c479160696c8b1d0b6, type: 2}
-  - {fileID: 11400000, guid: 30563e04ecbc40748abb599196256d62, type: 2}
-  - {fileID: 11400000, guid: 6cfead69b1c6bff4482cdb6e822a01c5, type: 2}
-  - {fileID: 11400000, guid: a85bbaec7e6c29343985f0c1d6f5bb36, type: 2}
-  - {fileID: 11400000, guid: 5e4e19ea4d04ae5489ac775678788495, type: 2}
-  - {fileID: 11400000, guid: e505b058efbb25741a17ead19193a442, type: 2}
-  - {fileID: 11400000, guid: ee21516a9a340434aa3d2b0b200fc57c, type: 2}
-  - {fileID: 11400000, guid: 9ea1aa21985dc1647a936cdd9ff7f675, type: 2}
-  shopViewPrefab: {fileID: 2729215944150620704, guid: c7779a7b1c0aeb8458dfbbf703c4f143, type: 3}
-  inventoryViewPrefab: {fileID: 2760153890927187590, guid: 55983b2d166b39142b4a918b0d0908e1, type: 3}
-  itemDetailsPanelPrefab: {fileID: 5803083149757495878, guid: d60201d0f01b4e143a188a03df4a7194, type: 3}
-  itemCountSetterPanelPrefab: {fileID: 8179910932815332592, guid: 10545dc6343b1f148bce6e78aef70c23, type: 3}
-  confirmationRequestPanelPrefab: {fileID: 7499085819267952191, guid: a7dce2665d0f88742920fbb0021266fb, type: 3}
-  transactionCompleteOverlayPrefab: {fileID: 4446482957281917388, guid: 1e7417a1482671d41a2757076b94cfad, type: 3}
-  gatherResourcesButtonPrefab: {fileID: 7516006616554265433, guid: 472ad4909f9b43348a0d2bc4fac35d90, type: 3}
 --- !u!1 &1250283250
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,6 +383,70 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1772511868
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1772511869}
+  - component: {fileID: 1772511870}
+  m_Layer: 0
+  m_Name: GameService
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1772511869
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772511868}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1772511870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772511868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dee8bfdce5969b4dbdd578cb1b764c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsSOList:
+  - {fileID: 11400000, guid: ea176595ddcb5984bb38cbc66eda400e, type: 2}
+  - {fileID: 11400000, guid: 9a58918e3f9cf954f8cd076e5d84711e, type: 2}
+  - {fileID: 11400000, guid: 8ce7270a1c5a4294d808445e6210a21c, type: 2}
+  - {fileID: 11400000, guid: d88f75734d3e13c479160696c8b1d0b6, type: 2}
+  - {fileID: 11400000, guid: 30563e04ecbc40748abb599196256d62, type: 2}
+  - {fileID: 11400000, guid: 6cfead69b1c6bff4482cdb6e822a01c5, type: 2}
+  - {fileID: 11400000, guid: a85bbaec7e6c29343985f0c1d6f5bb36, type: 2}
+  - {fileID: 11400000, guid: 5e4e19ea4d04ae5489ac775678788495, type: 2}
+  - {fileID: 11400000, guid: e505b058efbb25741a17ead19193a442, type: 2}
+  - {fileID: 11400000, guid: ee21516a9a340434aa3d2b0b200fc57c, type: 2}
+  - {fileID: 11400000, guid: 9ea1aa21985dc1647a936cdd9ff7f675, type: 2}
+  shopPrefab: {fileID: 2729215944150620704, guid: c7779a7b1c0aeb8458dfbbf703c4f143, type: 3}
+  inventoryPrefab: {fileID: 2760153890927187590, guid: 55983b2d166b39142b4a918b0d0908e1, type: 3}
+  gatherResourcesPrefab: {fileID: 7516006616554265433, guid: 472ad4909f9b43348a0d2bc4fac35d90, type: 3}
+  itemDetailsPrefab: {fileID: 5803083149757495878, guid: d60201d0f01b4e143a188a03df4a7194, type: 3}
+  itemCountSetterPrefab: {fileID: 8179910932815332592, guid: 10545dc6343b1f148bce6e78aef70c23, type: 3}
+  confirmationRequestPrefab: {fileID: 7499085819267952191, guid: a7dce2665d0f88742920fbb0021266fb, type: 3}
+  transactionCompletePrefab: {fileID: 4446482957281917388, guid: 1e7417a1482671d41a2757076b94cfad, type: 3}
+  shopAndInventoryParent: {fileID: 1220667650}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -422,3 +454,4 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 1250283253}
   - {fileID: 1220667650}
+  - {fileID: 1772511869}
